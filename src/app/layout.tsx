@@ -11,6 +11,9 @@ import { ScrollProgress } from "@/components/motion";
 import { SITE_URL, site } from "@/lib/site";
 import { clinicSchema, graph, organizationSchema, websiteSchema } from "@/lib/schema";
 
+/** Google tag (gtag.js) measurement ID for this site's Google account. */
+const GOOGLE_TAG_ID = "G-92YRJYVKFE";
+
 /** Display serif — the wordmark and every headline. */
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -113,6 +116,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
+        {/* Google tag (gtag.js) — must stay the first child of <head>, and appear only once. */}
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`} />
+        <script
+          // Static, developer-authored snippet from Google — no user input reaches this.
+          dangerouslySetInnerHTML={{
+            __html: `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '${GOOGLE_TAG_ID}');
+`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <script
           type="application/ld+json"
